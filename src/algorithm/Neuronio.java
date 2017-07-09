@@ -8,7 +8,8 @@ package algorithm;
 import java.util.HashMap;
 
 /**
- *
+ * 
+ * @author brunolima
  * @author leandroungari
  */
 public class Neuronio {

@@ -6,7 +6,8 @@
 package algorithm;
 
 /**
- *
+ * 
+ * @author brunolima
  * @author leandroungari
  */
 public class FuncaoTransferencia {
