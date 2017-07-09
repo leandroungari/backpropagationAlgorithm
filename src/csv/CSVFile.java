@@ -42,7 +42,7 @@ public class CSVFile {
                 
             } catch (NumberFormatException e) {
                 
-                //literally, do nothing!
+                //passar para o proximo
             }
 
         }

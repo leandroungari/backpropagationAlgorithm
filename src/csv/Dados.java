@@ -46,19 +46,22 @@ public class Dados {
         
         for(Dados d: entrada){
             
-            if (d.get(0) > max.get(0))  d.set(0, d.get(0));
-            if (d.get(1) > max.get(1))  d.set(1, d.get(1));
-            if (d.get(2) > max.get(2))  d.set(2, d.get(2));
-            if (d.get(3) > max.get(3))  d.set(3, d.get(3));
-            if (d.get(4) > max.get(4))  d.set(4, d.get(4));
-            if (d.get(5) > max.get(5))  d.set(5, d.get(5));
-            if (d.get(6) > max.get(6))  d.set(6, d.get(6));
+            
+            for(int i = 0; i < d.dados.length; i++){
+                
+                if (d.get(i) > max.get(i))  max.set(i, d.get(i));
+            }
             
         }
         
         for(Dados d: entrada){
             
-            d.set(0, d.get(0)/max.get(0));
+            for(int i = 0; i < d.dados.length; i++){
+                
+                d.set(i, d.get(i)/max.get(i));
+            }
+            
+            
         }
         
         return entrada;

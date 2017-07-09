@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
+ * 
+ * @author brunolima
  * @author leandroungari
  */
 public class BackPropagation {
