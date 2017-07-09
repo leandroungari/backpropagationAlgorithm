@@ -5,6 +5,7 @@
  */
 package csv;
 
+import algorithm.Classe;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -15,13 +16,21 @@ import java.util.ArrayList;
  */
 public class Arquivo {
     
-public static ArrayList<Double[]> dados = new ArrayList<>();
+    public ArrayList<Classe> classes = new ArrayList();
     
-    public static void readCSV(String filename){
+    public Arquivo(){
+        //Construtor da classe Arquivo
+    }
+    
+    public void readCSV(String filename){
         
         try{
             
+            int contadorClasses = 0;
+            int classeAtual;
+            int n1, n2, n3, n4, n5, n6;
             String linha = "";
+            
             BufferedReader arquivo = new BufferedReader(new FileReader(filename));
             
             //Leitura da linha inicial = X1,X2,X3,X4,X5,X6,classe
@@ -33,10 +42,24 @@ public static ArrayList<Double[]> dados = new ArrayList<>();
                 //Separando os tokens
                 String[] row = linha.split(",");
                 
-                System.out.println(row[0] + "," + row[1] + "," + row[2] + "," + row[3] + "," +
-                        row[4] + "," + row[5] + "," + row[6]);
+                classeAtual = Integer.parseInt(row[6]);
+                //Encontra uma classe nova, insere um novo objeto Classe na lista de classes.
+                if(classeAtual != contadorClasses){
+                    
+                    Classe c = new Classe(classeAtual, 6);
+                    this.classes.add(c);
+                    contadorClasses++;
+                }
+                     
+                //Adicionando os neuronios de uma classe, são 6 por padrão, não necessario tratar erros de quantidade
+                n1 = Integer.parseInt(row[0]);
+                n2 = Integer.parseInt(row[1]);
+                n3 = Integer.parseInt(row[2]);
+                n4 = Integer.parseInt(row[3]);
+                n5 = Integer.parseInt(row[4]);
+                n6 = Integer.parseInt(row[5]);
+                this.classes.get(classeAtual-1).addNeuronios(n1, n2, n3, n4, n5, n6);
                 
-                //Pensar em uma estrutura que seja boa para armazenar as classes e seus dados
             }
             
         }catch(Exception e){

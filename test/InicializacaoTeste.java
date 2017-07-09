@@ -1,5 +1,6 @@
 
 import algorithm.BackPropagation;
+import algorithm.Classe;
 import algorithm.FuncaoTransferencia;
 import csv.Arquivo;
 
@@ -22,9 +23,14 @@ public class InicializacaoTeste {
         
         //System.out.println(b);
         
-        String filename = "C:\\Users\\bruno\\Desktop\\teste.csv";
-        //String filename = "C:\\Users\\bruno\\Desktop\\treinamento.csv";
-        Arquivo.readCSV(filename);
+        //String filename = "C:\\Users\\bruno\\Desktop\\teste.csv";
+        String filename = "C:\\Users\\bruno\\Desktop\\treinamento.csv";
+        Arquivo a = new Arquivo();
+        a.readCSV(filename);
         
+        //Testando se os valores estão corretos
+        for(Classe c : a.classes){
+            c.exibir();
+        }
     }
 }
