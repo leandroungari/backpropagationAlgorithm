@@ -15,24 +15,41 @@ public class Camada {
     public static final int OCULTA = 1;
     public static final int SAIDA = 2;
     
-    private No[] nos;
+    private Neuronio[] nos;
+    private Camada anterior;
     
-    public Camada(double[] dados, int pesosPorNo){
+    public Camada(double[] dados, Camada anterior){
         
-        this.nos = new No[dados.length];
+        this.nos = new Neuronio[dados.length];
+        this.anterior = anterior;
         
         for(int i = 0; i < this.nos.length; i++){
             
-            nos[i] = new No(dados[i], pesosPorNo);
-            nos[i].inicializarPesos();
+            nos[i] = new Neuronio(BackPropagation.contadorNeuronio++, dados[i]);
+            nos[i].inicializarPesos(anterior);
         }
     }
+
+    public Neuronio[] getNeuronios() {
+        return nos;
+    }
+    
+    public boolean temCamadaAnterior(){
+        
+        return this.anterior != null;
+    }
+    
+    public Camada getAnterior(){
+        
+        return this.anterior;
+    }
+    
 
     @Override
     public String toString() {
         
         StringBuilder s = new StringBuilder("");
-        for(No no: nos){
+        for(Neuronio no: nos){
             s.append(no);
         }
         
