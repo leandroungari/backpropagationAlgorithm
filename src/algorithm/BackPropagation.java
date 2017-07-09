@@ -5,6 +5,8 @@
  */
 package algorithm;
 
+import csv.Dados;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -32,16 +34,18 @@ public class BackPropagation {
 
     private boolean opcaoErro;
 
+    private MatrizConfusao matriz;
+
     public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, double erroMax) {
 
         this.opcaoErro = true;
 
         this.erroMax = erroMax;
         this.numIteracoesMax = 0;
-        
+
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada*numSaida)));
+        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida)));
 
         this.camadas = new Camada[3];
 
@@ -50,18 +54,20 @@ public class BackPropagation {
         this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.SAIDA]);
 
         this.funcao = funcao;
+
+        this.matriz = new MatrizConfusao(numSaida);
     }
-    
+
     public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, int numIteracoesMax) {
 
         this.opcaoErro = false;
 
         this.erroMax = 0;
         this.numIteracoesMax = numIteracoesMax;
-        
+
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada*numSaida)));
+        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida)));
 
         this.camadas = new Camada[3];
 
@@ -72,7 +78,55 @@ public class BackPropagation {
         this.funcao = funcao;
     }
 
-    public void treinar(double[] entrada, double[] saida) {
+    public void teste(ArrayList<Dados> dados) {
+
+        for (Dados d : dados) {
+
+        }
+    }
+
+    private void testar(double[] entrada, double[] saida) {
+
+        int i = 0;
+        for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
+
+            n.setNet(entrada[i++]);
+        }
+
+        for (Neuronio n : this.camadas[Camada.OCULTA].getNeuronios()) {
+            
+            double soma = 0;
+            for (Neuronio no : this.camadas[Camada.ENTRADA].getNeuronios()) {
+
+                soma += n.getPeso(no.getId())*no.getNet();
+            }
+            
+            n.setNet(soma);
+            n.setSaida(FuncaoTransferencia.funcao(soma));
+        }
+        
+        for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
+            
+            double soma = 0;
+            for (Neuronio no : this.camadas[Camada.OCULTA].getNeuronios()) {
+
+                soma += n.getPeso(no.getId())*no.getNet();
+            }
+            
+            n.setNet(soma);
+            n.setSaida(FuncaoTransferencia.funcao(soma));
+        }
+    }
+
+    public void treinamento(ArrayList<Dados> dados) {
+
+        for (Dados d : dados) {
+
+            this.treinar(new double[]{d.get(0), d.get(1), d.get(2), d.get(3), d.get(4), d.get(5)}, new double[]{d.get(6)});
+        }
+    }
+
+    private void treinar(double[] entrada, double[] saida) {
 
         this.entrada = new HashMap<>();
         int i = 0;
@@ -87,7 +141,7 @@ public class BackPropagation {
 
             this.saida.put(n.getId(), saida[i++]);
         }
-        
+
         int numIteracoes = 0;
         boolean flag;
 

@@ -5,17 +5,50 @@
  */
 package csv;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
  * @author leandroungari
  */
 public class CSVFile {
-    
-    public static ArrayList<Double[]> dados = new ArrayList<>();
-    
-    public static void read(String filename){
-        
+
+    public static ArrayList<Dados> read(String filename) throws FileNotFoundException {
+
+        Scanner leitura = new Scanner(new File(filename));
+        ArrayList<Dados> dados = new ArrayList<>();
+
+        while (leitura.hasNextLine()) {
+
+            String linha = leitura.nextLine().replaceAll("\"", "");
+
+            String[] elementos = linha.split(",");
+
+            try {
+                
+                Double.parseDouble(elementos[0]);
+                
+                double[] d = new double[elementos.length];
+
+                for (int i = 0; i < elementos.length; i++) {
+
+                    d[i] = Double.parseDouble(elementos[i]);
+                }
+
+                dados.add(new Dados(d));
+                
+            } catch (NumberFormatException e) {
+                
+                //literally, do nothing!
+            }
+
+        }
+
+
+        return dados;
     }
+
 }

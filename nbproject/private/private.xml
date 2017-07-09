@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
+        <file>
+            <url>src/csv/Dados.java</url>
+            <bookmark id="2">
+                <name/>
+                <line>39</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/BackPropagation.java</file>
-            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/Camada.java</file>
-            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/Neuronio.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/test/Treinamento.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/MatrizConfusao.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/csv/Dados.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/test/Inicializacao.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/csv/CSVFile.java</file>
         </group>
     </open-files>
 </project-private>
