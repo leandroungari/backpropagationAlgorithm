@@ -1,5 +1,6 @@
 
 import algorithm.BackPropagation;
+import algorithm.FuncaoTransferencia;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,8 +16,8 @@ public class InicializacaoTeste {
     
     public static void main(String[] args) {
         
-        //BackPropagation b = new BackPropagation(new double[]{0,1}, new double[]{1}, 1);
+        BackPropagation b = new BackPropagation(2,1, 1, FuncaoTransferencia.LOGISTICA, 0.001);
         
-        //System.out.println(b);
+        System.out.println(b);
     }
 }

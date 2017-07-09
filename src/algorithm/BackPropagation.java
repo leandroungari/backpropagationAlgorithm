@@ -13,8 +13,8 @@ import java.util.HashMap;
  */
 public class BackPropagation {
 
-    private final HashMap<Integer, Double> entrada;
-    private final HashMap<Integer, Double> saida;
+    private HashMap<Integer, Double> entrada;
+    private HashMap<Integer, Double> saida;
 
     private final double taxaAprendizagem;
 
@@ -23,7 +23,7 @@ public class BackPropagation {
 
     public static int contadorNeuronio = 0;
 
-    private FuncaoTransferencia funcao;
+    private int funcao;
 
     private double erroMax;
     private int numIteracoesMax;
@@ -32,7 +32,7 @@ public class BackPropagation {
 
     private boolean opcaoErro;
 
-    public BackPropagation(double[] entrada, double[] saida, double taxaAprendizagem, FuncaoTransferencia funcao, double erroMax) {
+    public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, double erroMax) {
 
         this.opcaoErro = true;
 
@@ -41,34 +41,18 @@ public class BackPropagation {
         
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(entrada.length * saida.length)));
+        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada*numSaida)));
 
         this.camadas = new Camada[3];
 
-        this.camadas[Camada.ENTRADA] = new Camada(entrada, null);
-        this.camadas[Camada.OCULTA] = new Camada(new double[this.tamanhoCamadaOculta], this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(saida, this.camadas[Camada.SAIDA]);
+        this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
+        this.camadas[Camada.OCULTA] = new Camada(tamanhoCamadaOculta, this.camadas[Camada.ENTRADA]);
+        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.SAIDA]);
 
         this.funcao = funcao;
-
-        this.entrada = new HashMap<>();
-        int i = 0;
-        for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
-
-            this.entrada.put(n.getId(), entrada[i++]);
-        }
-
-        this.saida = new HashMap<>();
-        i = 0;
-        for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
-
-            this.saida.put(n.getId(), saida[i++]);
-        }
-
     }
     
-    public BackPropagation(double[] entrada, double[] saida, double taxaAprendizagem, FuncaoTransferencia funcao, int numIteracoesMax) {
+    public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, int numIteracoesMax) {
 
         this.opcaoErro = false;
 
@@ -77,16 +61,18 @@ public class BackPropagation {
         
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(entrada.length * saida.length)));
+        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada*numSaida)));
 
         this.camadas = new Camada[3];
 
-        this.camadas[Camada.ENTRADA] = new Camada(entrada, null);
-        this.camadas[Camada.OCULTA] = new Camada(new double[this.tamanhoCamadaOculta], this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(saida, this.camadas[Camada.SAIDA]);
+        this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
+        this.camadas[Camada.OCULTA] = new Camada(tamanhoCamadaOculta, this.camadas[Camada.ENTRADA]);
+        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.SAIDA]);
 
         this.funcao = funcao;
+    }
+
+    public void treinar(double[] entrada, double[] saida) {
 
         this.entrada = new HashMap<>();
         int i = 0;
@@ -101,11 +87,7 @@ public class BackPropagation {
 
             this.saida.put(n.getId(), saida[i++]);
         }
-
-    }
-
-    public void treinar() {
-
+        
         int numIteracoes = 0;
         boolean flag;
 
@@ -117,9 +99,9 @@ public class BackPropagation {
                     for (Neuronio no : camada.getNeuronios()) {
 
                         double soma = 0;
-                        for (Neuronio entrada : camada.getAnterior().getNeuronios()) {
+                        for (Neuronio n : camada.getAnterior().getNeuronios()) {
 
-                            soma += no.getNet() * no.getPeso(entrada.getId());
+                            soma += no.getNet() * no.getPeso(n.getId());
                         }
 
                         no.setNet(soma);

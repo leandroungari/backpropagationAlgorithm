@@ -18,14 +18,14 @@ public class Camada {
     private Neuronio[] nos;
     private Camada anterior;
     
-    public Camada(double[] dados, Camada anterior){
+    public Camada(int tamanho, Camada anterior){
         
-        this.nos = new Neuronio[dados.length];
+        this.nos = new Neuronio[tamanho];
         this.anterior = anterior;
         
         for(int i = 0; i < this.nos.length; i++){
             
-            nos[i] = new Neuronio(BackPropagation.contadorNeuronio++, dados[i]);
+            nos[i] = new Neuronio(BackPropagation.contadorNeuronio++, 0);
             nos[i].inicializarPesos(anterior);
         }
     }
