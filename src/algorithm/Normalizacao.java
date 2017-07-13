@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Normalizacao {
     
     
-    public static void normalizacao(ArrayList<Dados> treinamento, ArrayList<Dados> teste){
+    public static void normalizar(ArrayList<Dados> treinamento, ArrayList<Dados> teste){
         
         //Inicializando max para obter o maior valor
         Dados max = treinamento.get(0);

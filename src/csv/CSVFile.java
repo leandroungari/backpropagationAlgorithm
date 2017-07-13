@@ -19,6 +19,7 @@ import java.util.Scanner;
 public class CSVFile {
 
     public static int qtdClasses;
+    public static int numElementos;
     public static HashMap<Integer,Integer> classes = new HashMap();
     
     public static ArrayList<Dados> read(String filename) throws FileNotFoundException {
@@ -34,7 +35,8 @@ public class CSVFile {
             String linha = leitura.nextLine().replaceAll("\"", "");
 
             String[] elementos = linha.split(",");
-
+            numElementos = elementos.length - 1;
+            
             try {
                 
                 Double.parseDouble(elementos[0]);
@@ -64,4 +66,13 @@ public class CSVFile {
         return(dados);
     }
 
+    public static String getClasses() {
+    
+        String s = "[";
+        for(Integer e: classes.keySet()){
+            s +=  e + ",";
+        }
+        s += "]";
+        return(s);
+    }
 }
