@@ -11,7 +11,8 @@ import java.util.ArrayList;
  */
 
 /**
- *
+ * 
+ * @author brunolima
  * @author leandroungari
  */
 public class LeituraCSV {
@@ -19,7 +20,9 @@ public class LeituraCSV {
     public static void main(String[] args) throws FileNotFoundException {
         
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/teste.csv");
-        
-        System.out.println(dados.get(1));
+
+        System.out.println(dados);
+        Dados.normalizacao(dados);
+        System.out.println(dados);
     }
 }

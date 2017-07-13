@@ -10,6 +10,7 @@ import java.util.ArrayList;
 /**
  *
  * @author leandroungari
+ * @author brunoslima
  */
 public class Dados {
     
@@ -29,6 +30,10 @@ public class Dados {
         dados[i] = e;
     }
 
+    public double[] getDados() {
+        return dados;
+    }
+
     @Override
     public String toString() {
     
@@ -40,18 +45,16 @@ public class Dados {
         return s + "\b]";
     }
     
-    public static <E> ArrayList<Dados> normalizacao(ArrayList<Dados> entrada){
+    public static ArrayList<Dados> normalizacao(ArrayList<Dados> entrada){
         
         Dados max = entrada.get(0);
         
         for(Dados d: entrada){
             
-            
             for(int i = 0; i < d.dados.length; i++){
                 
                 if (d.get(i) > max.get(i))  max.set(i, d.get(i));
             }
-            
         }
         
         for(Dados d: entrada){
@@ -60,10 +63,9 @@ public class Dados {
                 
                 d.set(i, d.get(i)/max.get(i));
             }
-            
-            
         }
         
         return entrada;
     }
+    
 }

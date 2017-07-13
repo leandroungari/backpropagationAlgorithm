@@ -84,6 +84,7 @@ public class BackPropagation {
         for (Dados d : dados) {
 
         }
+        
     }
 
     private void testar(double[] entrada, double[] saida) {
