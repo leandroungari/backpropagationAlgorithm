@@ -20,7 +20,7 @@ public class Treinamento {
     
     public static void main(String[] args) throws FileNotFoundException {
         
-        BackPropagation b = new BackPropagation(3,1,2, 1, FuncaoTransferencia.LOGISTICA, 0.001);
+        BackPropagation b = new BackPropagation(6,5,4, 1, FuncaoTransferencia.LOGISTICA, 0.001);
         
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/treinamento.csv");
         

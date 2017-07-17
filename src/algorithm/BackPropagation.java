@@ -91,17 +91,11 @@ public class BackPropagation {
             //Tamanho do vetor de dados
             tamanho = d.getDados().length;
 
-            //Inicializando entrada
+            //Inicializando entrada e saida
             dadosEntrada = new double[tamanho-1];
-            for(int i = 0; i < tamanho-1; i++){
-
-                dadosEntrada[i] = d.get(i);
-            }
-
-            //Inicializando saída
-            dadosSaida = new double[1];
-            dadosSaida[0] = d.get(tamanho-1);
-
+            dadosSaida = new double[tamanho-2];
+            this.inicializarVetores(dadosEntrada, dadosSaida, tamanho, d);
+            
             //Realizando treinamento
             this.testar(dadosEntrada, dadosSaida);
         }
@@ -157,6 +151,27 @@ public class BackPropagation {
         
     }
 
+    public void inicializarVetores(double entrada[], double saida[], int tamanho, Dados d){
+    
+            for(int i = 0; i < tamanho-1; i++){
+
+                entrada[i] = d.get(i);
+            }
+
+            if(this.funcao == 2){ //Logistica [0,1]
+                
+                saida[(int)d.get(tamanho-1)-1] = 1.0;
+            }
+            else if(this.funcao == 3){ //Hiperbolica [-1,1]
+                
+                for(int i = 0; i < tamanho-1; i++){
+                    saida[i] = -1.0;
+                }
+                saida[(int)d.get(tamanho-1)-1] = 1.0;
+            }
+            
+    }
+    
     public void treinamento(ArrayList<Dados> dados) {
 
         int tamanho, numIteracoes = 0;
@@ -170,17 +185,11 @@ public class BackPropagation {
                 //Tamanho do vetor de dados
                 tamanho = d.getDados().length;
 
-                //Inicializando entrada
+                //Inicializando entrada e saida.
                 dadosEntrada = new double[tamanho-1];
-                for(int i = 0; i < tamanho-1; i++){
-
-                    dadosEntrada[i] = d.get(i);
-                }
-
-                //Inicializando saída
-                dadosSaida = new double[1];
-                dadosSaida[0] = d.get(tamanho-1);
-
+                dadosSaida = new double[tamanho-2];
+                this.inicializarVetores(dadosEntrada, dadosSaida, tamanho, d);
+                
                 //Realizando treinamento
                 this.treinar(dadosEntrada, dadosSaida);
                 
