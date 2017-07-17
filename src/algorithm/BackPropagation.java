@@ -77,6 +77,8 @@ public class BackPropagation {
         this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
 
         this.funcao = funcao;
+        
+        this.matrizConfusao = new MatrizConfusao(numSaida);
     }
 
     public void teste(ArrayList<Dados> dados) {
@@ -137,6 +139,22 @@ public class BackPropagation {
             n.setNet(soma);
             n.setSaida(FuncaoTransferencia.funcao(soma));
         }
+        
+        //Montando a matriz confusão
+        int real, obtido; 
+        
+        ArrayList<Double> obtidos = new ArrayList();
+        for(Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()){
+            
+           obtidos.add(n.getSaida());
+        }
+        obtidos.sort(null);
+        obtido =(int) Math.ceil(obtidos.get(obtidos.size()));
+        
+        real = (int) Math.ceil(dadoSaida[0]);
+        
+        matrizConfusao.add(real, obtido);
+        
     }
 
     public void treinamento(ArrayList<Dados> dados) {
@@ -174,6 +192,7 @@ public class BackPropagation {
             flag = this.pararTreinamento(opcaoErro, numIteracoes);
             
         }while(!flag);
+        
     }
 
     private void treinar(double[] dadoEntrada, double[] dadoSaida) {
