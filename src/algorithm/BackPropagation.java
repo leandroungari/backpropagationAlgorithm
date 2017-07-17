@@ -23,21 +23,19 @@ public class BackPropagation {
 
     private final Camada[] camadas;
     private int tamanhoCamadaOculta;
-
     public static int contadorNeuronio = 0;
 
     private int funcao;
-
     private double erroMax;
     private int numIteracoesMax;
 
     private double erroRede;
-
     private boolean opcaoErro;
 
-    private MatrizConfusao matriz;
+    private MatrizConfusao matrizConfusao;
 
-    public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, double erroMax) {
+    
+    public BackPropagation(int numEntrada, int numSaida, int numCamadaOculta, double taxaAprendizagem, int funcao, double erroMax) {
 
         this.opcaoErro = true;
 
@@ -46,20 +44,21 @@ public class BackPropagation {
 
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida)));
+        //this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida))); //OBS: permitir que o usuario insira;
+        this.tamanhoCamadaOculta = numCamadaOculta;
 
         this.camadas = new Camada[3];
 
         this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
         this.camadas[Camada.OCULTA] = new Camada(tamanhoCamadaOculta, this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.SAIDA]);
+        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
 
         this.funcao = funcao;
 
-        this.matriz = new MatrizConfusao(numSaida);
+        this.matrizConfusao = new MatrizConfusao(numSaida);
     }
 
-    public BackPropagation(int numEntrada, int numSaida, double taxaAprendizagem, int funcao, int numIteracoesMax) {
+    public BackPropagation(int numEntrada, int numSaida, int numCamadaOculta, double taxaAprendizagem, int funcao, int numIteracoesMax) {
 
         this.opcaoErro = false;
 
@@ -68,31 +67,51 @@ public class BackPropagation {
 
         //======================================
         this.taxaAprendizagem = taxaAprendizagem;
-        this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida)));
-
+        //this.tamanhoCamadaOculta = (int) (Math.ceil(Math.sqrt(numEntrada * numSaida))); //OBS: permitir que o usuario insira;
+        this.tamanhoCamadaOculta = numCamadaOculta;
+        
         this.camadas = new Camada[3];
 
         this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
         this.camadas[Camada.OCULTA] = new Camada(tamanhoCamadaOculta, this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.SAIDA]);
+        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
 
         this.funcao = funcao;
     }
 
     public void teste(ArrayList<Dados> dados) {
 
+        int tamanho, numIteracoes = 0;
+        double dadosEntrada[], dadosSaida[];
+        
         for (Dados d : dados) {
 
+            //Tamanho do vetor de dados
+            tamanho = d.getDados().length;
+
+            //Inicializando entrada
+            dadosEntrada = new double[tamanho-1];
+            for(int i = 0; i < tamanho-1; i++){
+
+                dadosEntrada[i] = d.get(i);
+            }
+
+            //Inicializando saída
+            dadosSaida = new double[1];
+            dadosSaida[0] = d.get(tamanho-1);
+
+            //Realizando treinamento
+            this.testar(dadosEntrada, dadosSaida);
         }
         
     }
 
-    private void testar(double[] entrada, double[] saida) {
+    private void testar(double[] dadoEntrada, double[] dadoSaida) {
 
         int i = 0;
         for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
 
-            n.setNet(entrada[i++]);
+            n.setNet(dadoEntrada[i++]);
         }
 
         for (Neuronio n : this.camadas[Camada.OCULTA].getNeuronios()) {
@@ -122,32 +141,62 @@ public class BackPropagation {
 
     public void treinamento(ArrayList<Dados> dados) {
 
-        for (Dados d : dados) {
+        int tamanho, numIteracoes = 0;
+        double dadosEntrada[], dadosSaida[];
+        boolean flag = false;
+        
+        do{
+            
+            for (Dados d : dados) {
+                
+                //Tamanho do vetor de dados
+                tamanho = d.getDados().length;
 
-            this.treinar(new double[]{d.get(0), d.get(1), d.get(2), d.get(3), d.get(4), d.get(5)}, new double[]{d.get(6)});
-        }
+                //Inicializando entrada
+                dadosEntrada = new double[tamanho-1];
+                for(int i = 0; i < tamanho-1; i++){
+
+                    dadosEntrada[i] = d.get(i);
+                }
+
+                //Inicializando saída
+                dadosSaida = new double[1];
+                dadosSaida[0] = d.get(tamanho-1);
+
+                //Realizando treinamento
+                this.treinar(dadosEntrada, dadosSaida);
+                
+                //this.treinar(new double[]{d.get(0), d.get(1), d.get(2), d.get(3), d.get(4), d.get(5)}, new double[]{d.get(6)});
+
+            }
+            
+            numIteracoes++;
+            flag = this.pararTreinamento(opcaoErro, numIteracoes);
+            
+        }while(!flag);
     }
 
-    private void treinar(double[] entrada, double[] saida) {
+    private void treinar(double[] dadoEntrada, double[] dadoSaida) {
 
+        //Inicializando estruturas de entrada e saida da rede
         this.entrada = new HashMap<>();
         int i = 0;
         for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
 
-            this.entrada.put(n.getId(), entrada[i++]);
+            this.entrada.put(n.getId(), dadoEntrada[i++]);
         }
 
         this.saida = new HashMap<>();
         i = 0;
         for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
 
-            this.saida.put(n.getId(), saida[i++]);
+            this.saida.put(n.getId(), dadoSaida[i++]);
         }
 
-        int numIteracoes = 0;
-        boolean flag;
+        //int numIteracoes = 0;
+        //boolean flag;
 
-        do {
+        //do {
             for (Camada camada : this.camadas) {
 
                 if (camada.temCamadaAnterior()) {
@@ -167,7 +216,7 @@ public class BackPropagation {
                 }
             }
 
-            //erro na saida
+            //erro na dadoSaida
             for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
 
                 n.setErro((n.getNet() - n.getSaida()) * FuncaoTransferencia.derivada(n.getNet()));
@@ -188,7 +237,7 @@ public class BackPropagation {
                 no.setSaida(FuncaoTransferencia.funcao(no.getNet()));
             }
 
-            //ajuste dos pesos da camada oculta e da saida
+            //ajuste dos pesos da camada oculta e da dadoSaida
             for (Camada camada : this.camadas) {
 
                 if (camada.temCamadaAnterior()) {
@@ -203,9 +252,10 @@ public class BackPropagation {
                 }
             }
 
-            numIteracoes++;
+            //numIteracoes++;
 
-            flag = false;
+            //flag = false;
+            /*
             if (opcaoErro) {
 
                 for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
@@ -222,8 +272,27 @@ public class BackPropagation {
                     flag = true;
                 }
             }
-        } while (flag);
+            */
+        //} while (flag);
 
+    }
+    
+    public boolean pararTreinamento(boolean opcaoErro, int numIteracoes){
+            boolean flag = true;
+            if (opcaoErro) {
+                for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
+
+                    if (0.5 * (n.getSaida() * n.getSaida()) > this.erroMax) {
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+            else {
+                if (numIteracoes == this.numIteracoesMax) flag = true;
+            }
+            
+            return(flag);
     }
 
     @Override
