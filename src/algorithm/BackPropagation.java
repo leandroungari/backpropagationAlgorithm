@@ -37,10 +37,21 @@ public class BackPropagation {
     private boolean opcaoErro;
     
     public static Random random;
-
-    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, double erroMax) {
+    
+    /////////////////////////////////////////
+    public static int PESO_ALEATORIO = 1;
+    public static int PESO_GAUSSIANO = 2;
+    
+    public static int tipoPeso;
+    
+    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, int tipoPeso, double erroMax) {
         
-        BackPropagation.random = new Random();
+        if (tipoPeso == PESO_GAUSSIANO) {
+            
+            BackPropagation.random = new Random();
+        }
+        
+        BackPropagation.tipoPeso = tipoPeso;
         
         this.numEntrada = numEntrada;
         this.numOculta = numOculta;
@@ -66,8 +77,15 @@ public class BackPropagation {
         this.matrizConfusao = new MatrizConfusao(numSaida);
     }
 
-    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, int numIteracoesMax) {
-
+    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, int tipoPeso, int numIteracoesMax) {
+        
+        if (tipoPeso == PESO_GAUSSIANO) {
+            
+            BackPropagation.random = new Random();
+        }
+        
+        BackPropagation.tipoPeso = tipoPeso;
+        
         this.opcaoErro = false;
 
         this.erroMax = 0;
@@ -209,10 +227,11 @@ public class BackPropagation {
 
         int numIteracoes = 0;
         double dadosEntrada[], dadosSaida[];
-        boolean flag = false;
+        boolean flag;
 
         do {
-          
+            
+            flag = false;
             for (Dados d : dados) {
 
                 //Tamanho do vetor de dados
@@ -318,10 +337,12 @@ public class BackPropagation {
             double soma = 0;
             for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
 
-                soma += 0.5 * (n.getSaida() * n.getSaida());
+                soma += (n.getErro() * n.getErro());
             }
             
-            System.out.println(soma);
+            soma *= 0.5;
+            
+            //System.out.println(soma);
             
             if (soma > this.erroMax) {
                 flag = true;
