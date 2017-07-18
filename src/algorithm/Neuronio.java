@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @author brunolima
  * @author leandroungari
  */
-public class Neuronio {
+public class Neuronio implements Comparable<Neuronio>{
     
     private int id;
     private double net;
@@ -104,5 +104,13 @@ public class Neuronio {
         s.append("\b] ");
         
         return s.toString();
+    }
+
+    @Override
+    public int compareTo(Neuronio o) {
+        
+        if(this.saida > o.saida) return 1;
+        else if (this.saida < o.saida) return -1;
+        return 0;
     }
 }

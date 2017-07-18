@@ -23,7 +23,7 @@ public class MatrizConfusao {
     
     public void add(int real, int obtida){
         
-        dados[obtida][real]++;
+        dados[real][obtida]++;
     }
 
     @Override

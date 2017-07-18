@@ -5,6 +5,7 @@
  */
 package csv;
 
+import algorithm.FuncaoTransferencia;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import java.util.Scanner;
  */
 public class CSVFile {
 
-    public static int qtdClasses;
-    public static int numElementos;
-    public static HashMap<Integer,Integer> classes = new HashMap();
+    public static int numEntrada;
+    public static HashMap<Integer, double[]> classes = new HashMap();
+    public static int numSaida;
     
     public static ArrayList<Dados> read(String filename) throws FileNotFoundException {
 
         int classe;
-        qtdClasses = 0;
+        
         
         Scanner leitura = new Scanner(new File(filename));
         ArrayList<Dados> dados = new ArrayList<>();
@@ -35,7 +36,7 @@ public class CSVFile {
             String linha = leitura.nextLine().replaceAll("\"", "");
 
             String[] elementos = linha.split(",");
-            numElementos = elementos.length - 1;
+            numEntrada = elementos.length - 1;
             
             try {
                 
@@ -50,7 +51,7 @@ public class CSVFile {
 
                 //Identificando quantidade de classes
                 classe = (int) d[elementos.length-1];
-                classes.put(classe,0);
+                classes.put(classe, null);
                 
                 //Adicionando na estrutura que armazena os valores das classes e de seus elementos
                 dados.add(new Dados(d));
@@ -62,7 +63,9 @@ public class CSVFile {
 
         }
         
-        qtdClasses = classes.size();
+        numSaida = classes.keySet().size();
+        
+        
         return(dados);
     }
 
@@ -74,5 +77,34 @@ public class CSVFile {
         }
         s += "]";
         return(s);
+    }
+    
+    public static void ajustarSaida(int funcaoTransferencia){
+        
+        double min, max;
+        
+        if(funcaoTransferencia == FuncaoTransferencia.LOGISTICA){
+            min = 0; max = 1;
+        }
+        else{
+            min = -1; max = 1;
+        }
+        
+        int posicao = 0;
+        for(Integer i: classes.keySet()){
+            
+            double[] vetor = new double[classes.keySet().size()];
+            for(int j = 0; j < vetor.length; j++){
+                if(posicao == j){
+                    vetor[j] = max;
+                }
+                else{
+                    vetor[j] = min;
+                }
+            }
+            
+            posicao++;
+            classes.put(i, vetor);
+        }
     }
 }

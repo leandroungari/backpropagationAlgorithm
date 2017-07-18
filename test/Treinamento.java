@@ -1,6 +1,7 @@
 
 import algorithm.BackPropagation;
 import algorithm.FuncaoTransferencia;
+import algorithm.Normalizacao;
 import csv.CSVFile;
 import csv.Dados;
 import java.io.FileNotFoundException;
@@ -20,12 +21,28 @@ public class Treinamento {
     
     public static void main(String[] args) throws FileNotFoundException {
         
-        BackPropagation b = new BackPropagation(6,5,4, 1, FuncaoTransferencia.LOGISTICA, 0.001);
+        
         
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/treinamento.csv");
+        CSVFile.ajustarSaida(FuncaoTransferencia.LOGISTICA);
+        
+        Normalizacao.obterMaximo(dados);
+        dados = Normalizacao.normalizar(dados);
+
+        
+        int numOculta = (int) Math.ceil(Math.sqrt(CSVFile.numEntrada*CSVFile.numSaida));
+        
+        BackPropagation b = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, 1, FuncaoTransferencia.LOGISTICA, 0.01);
+        
         
         b.treinamento(dados);
-        b.toString();
+        //b.toString();
+        
+        dados = CSVFile.read("Treinamento e Teste/teste.csv");
+        dados = Normalizacao.normalizar(dados);
+        b.teste(dados);
+        
+        System.out.println(b.getMatrizConfusao());
         
     }
 }

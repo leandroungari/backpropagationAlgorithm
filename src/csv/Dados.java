@@ -19,6 +19,11 @@ public class Dados {
     public Dados(double[] dados){
         this.dados = dados;
     }
+
+    public Dados(int size) {
+        
+        this.dados = new double[size];
+    }
     
     public double get(int i){
         
@@ -44,6 +49,21 @@ public class Dados {
         
         return s + "\b]";
     }
+
+    
+    @Override
+    public Dados clone()  {
+        
+        Dados d = new Dados(this.dados.length);
+        
+        for(int i = 0; i < this.dados.length; i++){
+            d.dados[i] = this.dados[i];
+        }
+        
+        return d;
+    }
+    
+    
     
     public static ArrayList<Dados> normalizacao(ArrayList<Dados> entrada){
         

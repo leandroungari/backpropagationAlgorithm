@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class LeituraCSV {
     
     public static void main(String[] args) throws FileNotFoundException {
-        
+        /*
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/teste.csv");
         System.out.println("TESTE\nNum elementos: " + CSVFile.numElementos + " Num Classes: " + CSVFile.qtdClasses);
         System.out.println("Classes = " + CSVFile.getClasses());
@@ -33,7 +33,7 @@ public class LeituraCSV {
         System.out.println("\nNORMALIZANDO");
         Normalizacao.normalizar(dados,dados2);
         System.out.println(dados); //Teste
-        System.out.println(dados2); //Treinamento
+        System.out.println(dados2); //Treinamento*/
         
     }
 }
