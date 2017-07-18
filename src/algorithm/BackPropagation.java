@@ -9,8 +9,7 @@ import csv.CSVFile;
 import csv.Dados;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Random;
 
 /**
  *
@@ -36,9 +35,13 @@ public class BackPropagation {
     private int numIteracoesMax;
     private double erroRede;
     private boolean opcaoErro;
+    
+    public static Random random;
 
     public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, double erroMax) {
-
+        
+        BackPropagation.random = new Random();
+        
         this.numEntrada = numEntrada;
         this.numOculta = numOculta;
         this.numSaida = numSaida;
@@ -58,6 +61,7 @@ public class BackPropagation {
         this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
 
         this.funcao = funcao;
+        FuncaoTransferencia.FUNCAO_ATUAL = this.funcao;
 
         this.matrizConfusao = new MatrizConfusao(numSaida);
     }
@@ -83,6 +87,8 @@ public class BackPropagation {
 
         this.funcao = funcao;
 
+        FuncaoTransferencia.FUNCAO_ATUAL = this.funcao;
+
         this.matrizConfusao = new MatrizConfusao(numSaida);
     }
 
@@ -96,9 +102,8 @@ public class BackPropagation {
 
         for (Dados d : dados) {
 
-
-            dadosEntrada = Arrays.copyOfRange(d.getDados(), 0, d.getDados().length - 2);
-            dadosSaida = CSVFile.classes.get(d.getDados()[d.getDados().length - 1]).clone();
+            dadosEntrada = Arrays.copyOfRange(d.getDados(), 0, d.getDados().length - 1);
+            dadosSaida = CSVFile.classes.get((int) d.getDados()[d.getDados().length - 1]).clone();
             //this.inicializarVetores(dadosEntrada, dadosSaida, tamanho, d);
 
             //Realizando treinamento
@@ -112,7 +117,9 @@ public class BackPropagation {
         int i = 0;
         for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
 
-            n.setNet(dadoEntrada[i++]);
+            n.setNet(dadoEntrada[i]);
+            n.setSaida(dadoEntrada[i]);
+            i++;
         }
 
         for (Neuronio n : this.camadas[Camada.OCULTA].getNeuronios()) {
@@ -120,7 +127,7 @@ public class BackPropagation {
             double soma = 0;
             for (Neuronio no : this.camadas[Camada.ENTRADA].getNeuronios()) {
 
-                soma += n.getPeso(no.getId()) * no.getNet();
+                soma += n.getPeso(no.getId()) * no.getSaida();
             }
 
             n.setNet(soma);
@@ -132,7 +139,7 @@ public class BackPropagation {
             double soma = 0;
             for (Neuronio no : this.camadas[Camada.OCULTA].getNeuronios()) {
 
-                soma += n.getPeso(no.getId()) * no.getNet();
+                soma += n.getPeso(no.getId()) * no.getSaida();
             }
 
             n.setNet(soma);
@@ -141,43 +148,38 @@ public class BackPropagation {
 
         ///////////////////////////////////
         //Montando a matriz confusão
+        
+        this.atualizarMatrizConfusao(dadoSaida);
+    }
+    
+    public void atualizarMatrizConfusao(double[] dadoSaida){
+        
         int real, obtido;
 
-        /*ArrayList<Double> obtidos = new ArrayList();
-        for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
-
-            obtidos.add(n.getSaida());
-        }
-        
-        
-        obtidos.sort(null);
-        obtido = (int) Math.ceil(obtidos.get(obtidos.size()));
-
-        real = (int) Math.ceil(dadoSaida[0]);*/
         double maior = dadoSaida[0];
         int posicao = 0;
-        for(int a  = 0; a < dadoSaida.length; a++){
-            if(dadoSaida[a] > maior){
+        for (int a = 0; a < dadoSaida.length; a++) {
+            if (dadoSaida[a] > maior) {
                 maior = dadoSaida[a];
                 posicao = a;
             }
         }
-        
+
         real = posicao;
-        
+
         maior = camadas[Camada.SAIDA].getNeuronios()[0].getSaida();
         posicao = 0;
-        for(int a  = 0; a < dadoSaida.length; a++){
-            if(camadas[Camada.SAIDA].getNeuronios()[a].getSaida() > maior){
+        for (int a = 0; a < camadas[Camada.SAIDA].getNeuronios().length; a++) {
+            if (camadas[Camada.SAIDA].getNeuronios()[a].getSaida() > maior) {
+                
                 maior = camadas[Camada.SAIDA].getNeuronios()[a].getSaida();
                 posicao = a;
             }
         }
-        
+
         obtido = posicao;
 
         matrizConfusao.add(real, obtido);
-
     }
 
     /*public void inicializarVetores(double entrada[], double saida[], int tamanho, Dados d){
@@ -210,7 +212,7 @@ public class BackPropagation {
         boolean flag = false;
 
         do {
-            int count = 0;
+          
             for (Dados d : dados) {
 
                 //Tamanho do vetor de dados
@@ -224,26 +226,31 @@ public class BackPropagation {
 
                 //this.treinar(new double[]{d.get(0), d.get(1), d.get(2), d.get(3), d.get(4), d.get(5)}, new double[]{d.get(6)});
                 //System.out.println(count++);
+                
+                if (this.pararTreinamento(opcaoErro, numIteracoes)) { //retorna true se o erro for maior do que o desejado
+                    flag = true;
+                }
+                
+                
             }
 
             numIteracoes++;
-            flag = this.pararTreinamento(opcaoErro, numIteracoes);
+            
 
-        } while (!flag);
+        } while (flag);
 
     }
 
     private void treinar(double[] dadoEntrada, double[] dadoSaida) {
 
-        
         int count = 0;
-        for(Neuronio n: this.camadas[Camada.ENTRADA].getNeuronios()){
+        for (Neuronio n : this.camadas[Camada.ENTRADA].getNeuronios()) {
             n.setNet(dadoEntrada[count]);
             n.setSaida(dadoEntrada[count]);
             count++;
         }
-        
-        
+
+        //System.out.println(this);
         //calcula net e saida da camada oculta e de saída
         for (Camada camada : this.camadas) {
 
@@ -278,18 +285,18 @@ public class BackPropagation {
             double erro = 0;
             for (Neuronio n : camadas[Camada.SAIDA].getNeuronios()) {
 
-                erro += n.getErro() * n.getPeso(no.getId()) * FuncaoTransferencia.derivada(no.getNet());
+                erro += n.getErro() * n.getPeso(no.getId());
             }
 
-            no.setErro(erro);
+            no.setErro(erro * FuncaoTransferencia.derivada(no.getNet()));
 
-            no.setSaida(FuncaoTransferencia.funcao(no.getNet()));
+            //importante
+            //no.setSaida(FuncaoTransferencia.funcao(no.getNet()));
         }
 
         //ajuste dos pesos da camada oculta e da saida
-        
         for (Camada camada : this.camadas) {
-            
+
             if (camada.temCamadaAnterior()) {
 
                 for (Neuronio no : camada.getNeuronios()) {
@@ -299,7 +306,6 @@ public class BackPropagation {
                         no.setPeso(n.getId(), no.getPeso(n.getId()) + taxaAprendizagem * no.getErro() * n.getSaida());
                     }
 
-                    
                 }
             }
         }
@@ -307,19 +313,23 @@ public class BackPropagation {
     }
 
     public boolean pararTreinamento(boolean opcaoErro, int numIteracoes) {
-        boolean flag = true;
+        boolean flag = false;
         if (opcaoErro) {
             double soma = 0;
             for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
 
                 soma += 0.5 * (n.getSaida() * n.getSaida());
             }
+            
             System.out.println(soma);
+            
             if (soma > this.erroMax) {
-                flag = false;
+                flag = true;
             }
+            
         } else {
-            if (numIteracoes == this.numIteracoesMax) {
+            
+            if (numIteracoes < this.numIteracoesMax) {
                 flag = true;
             }
         }
@@ -339,12 +349,14 @@ public class BackPropagation {
 
         return s.toString();
     }
+    
+    public Camada getCamada(int i){
+        return camadas[i];
+    }
 
     public MatrizConfusao getMatrizConfusao() {
-        
+
         return matrizConfusao;
     }
 
-    
-    
 }

@@ -34,7 +34,7 @@ public class Neuronio implements Comparable<Neuronio>{
         
         for(Neuronio n: anterior.getNeuronios()){
         
-            this.pesos.put(n.getId(), Math.random()*(Math.random() > 0.5 ? 1 : -1));
+            this.pesos.put(n.getId(), BackPropagation.random.nextGaussian());
         }
     }
     
