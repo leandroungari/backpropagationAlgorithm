@@ -18,33 +18,41 @@ import java.util.Random;
  */
 public class BackPropagation {
 
-    //private HashMap<Integer, Double> entrada;
-    //private HashMap<Integer, Double> saida;
-    private int numEntrada;
-    private int numOculta;
-    private int numSaida;
+    private final int numEntrada;
+    private final int numOculta;
+    private final int numSaida;
 
-    private final double taxaAprendizagem;
+    private double taxaAprendizagem;
     private int funcao;
     private final Camada[] camadas;
-    private MatrizConfusao matrizConfusao;
+    private final MatrizConfusao matrizConfusao;
 
     public static int contadorNeuronio = 0;
 
     private double erroMax;
     private int numIteracoesMax;
-    private double erroRede;
     private boolean opcaoErro;
     
     public static Random random;
     
-    /////////////////////////////////////////
     public static int PESO_ALEATORIO = 1;
     public static int PESO_GAUSSIANO = 2;
     
     public static int tipoPeso;
     
-    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, int tipoPeso, double erroMax) {
+    
+    
+    
+    /**
+     * A classe {@code BackPropagation} refere-se a uma rede neural cujo algoritmo de treinamento 
+     * consiste no algoritmo Backpropagation.
+     * 
+     * @param numEntrada Número de neurônios na camada de entrada.
+     * @param numSaida Número de neurônios na camada de saída.
+     * @param numOculta Número de neurônios na camada oculta.
+     * @param tipoPeso Constante número que define o tipo de peso entre aleatório ou gaussiano.
+     */
+    public BackPropagation(int numEntrada, int numSaida, int numOculta, int tipoPeso) {
         
         if (tipoPeso == PESO_GAUSSIANO) {
             
@@ -56,80 +64,79 @@ public class BackPropagation {
         this.numEntrada = numEntrada;
         this.numOculta = numOculta;
         this.numSaida = numSaida;
+
+        this.camadas = new Camada[3];
+        this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
+        this.camadas[Camada.OCULTA] = new Camada(numOculta, this.camadas[Camada.ENTRADA]);
+        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
+        
+        this.matrizConfusao = new MatrizConfusao(numSaida);
+        
+    }
+    
+    /**
+     * Atribui informações à rede.
+     * @param taxaAprendizagem Taxa de modificação da rede.
+     * @param funcao Função matemática de processamento da rede.
+     * @param erroMax Erro máximo no processo de treinamento.
+     */
+    public void inicializar(double taxaAprendizagem, int funcao, double erroMax){
+        
+        this.taxaAprendizagem = taxaAprendizagem;
 
         this.opcaoErro = true;
-
         this.erroMax = erroMax;
         this.numIteracoesMax = 0;
-
-        //======================================
-        this.taxaAprendizagem = taxaAprendizagem;
-
-        this.camadas = new Camada[3];
-
-        this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
-        this.camadas[Camada.OCULTA] = new Camada(numOculta, this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
-
+        
         this.funcao = funcao;
         FuncaoTransferencia.FUNCAO_ATUAL = this.funcao;
-
-        this.matrizConfusao = new MatrizConfusao(numSaida);
     }
+    
+    /**
+     * Atribui informações à rede.
+     * @param taxaAprendizagem Taxa de modificação da rede.
+     * @param funcao Função matemática de processamento da rede.
+     * @param numIteracoesMax Número máximo de iterações no treinamento.
+     */
+    public void inicializar(double taxaAprendizagem, int funcao, int numIteracoesMax){
+        
+        this.taxaAprendizagem = taxaAprendizagem;
 
-    public BackPropagation(int numEntrada, int numSaida, int numOculta, double taxaAprendizagem, int funcao, int tipoPeso, int numIteracoesMax) {
-        
-        if (tipoPeso == PESO_GAUSSIANO) {
-            
-            BackPropagation.random = new Random();
-        }
-        
-        BackPropagation.tipoPeso = tipoPeso;
-        
         this.opcaoErro = false;
-
         this.erroMax = 0;
         this.numIteracoesMax = numIteracoesMax;
-
-        //======================================
-        this.taxaAprendizagem = taxaAprendizagem;
-        this.numEntrada = numEntrada;
-        this.numOculta = numOculta;
-        this.numSaida = numSaida;
-
-        this.camadas = new Camada[3];
-
-        this.camadas[Camada.ENTRADA] = new Camada(numEntrada, null);
-        this.camadas[Camada.OCULTA] = new Camada(numOculta, this.camadas[Camada.ENTRADA]);
-        this.camadas[Camada.SAIDA] = new Camada(numSaida, this.camadas[Camada.OCULTA]);
-
+        
         this.funcao = funcao;
-
         FuncaoTransferencia.FUNCAO_ATUAL = this.funcao;
-
-        this.matrizConfusao = new MatrizConfusao(numSaida);
+        
     }
 
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
+    /**
+     * O método {@code teste()} executa o teste de um conjunto de dados identificado pelo parâmetro {@code dados}, em
+     * seguida, categoriza-os na matriz de confusão da rede.
+     * 
+     * @param dados Conjunto de dados para o teste.
+     */
     public void teste(ArrayList<Dados> dados) {
 
-        int tamanho, numIteracoes = 0;
         double dadosEntrada[], dadosSaida[];
-
+        
         for (Dados d : dados) {
-
+            
             dadosEntrada = Arrays.copyOfRange(d.getDados(), 0, d.getDados().length - 1);
             dadosSaida = CSVFile.classes.get((int) d.getDados()[d.getDados().length - 1]).clone();
-            //this.inicializarVetores(dadosEntrada, dadosSaida, tamanho, d);
-
-            //Realizando treinamento
+  
             this.testar(dadosEntrada, dadosSaida);
         }
 
     }
-
+    
+    /**
+     * Este método {@code testar()} executa o processo de teste para uma única entrada e uma única saída esperada.
+     * 
+     * @param dadoEntrada Conjunto de dados da entrada.
+     * @param dadoSaida Conjunto de dados da saída.
+     */
     private void testar(double[] dadoEntrada, double[] dadoSaida) {
 
         int i = 0;
@@ -163,22 +170,28 @@ public class BackPropagation {
             n.setNet(soma);
             n.setSaida(FuncaoTransferencia.funcao(soma));
         }
-
-        ///////////////////////////////////
-        //Montando a matriz confusão
         
         this.atualizarMatrizConfusao(dadoSaida);
     }
     
+    /**
+     * Este método {@code atualizarMatrizConfusao} classifica a saída da rede e atribui à matriz de confusão.
+     * @param dadoSaida Conjunto da saída esperada.
+     */
     public void atualizarMatrizConfusao(double[] dadoSaida){
         
         int real, obtido;
         real = this.maior(dadoSaida);
         obtido = this.maior(camadas[Camada.SAIDA].saidas());
-
+        
         matrizConfusao.add(real, obtido);
     }
     
+    /**
+     * Este método {@code maior} retorna a posição do maior elemento do conjunto.
+     * @param dadoSaida Conjunto de valores.
+     * @return Retorna posição do maior elemento.
+     */
     private int maior(double[] dadoSaida){
         
         double maior = dadoSaida[0];
@@ -193,29 +206,10 @@ public class BackPropagation {
         return posicao;
     }
 
-    /*public void inicializarVetores(double entrada[], double saida[], int tamanho, Dados d){
-    
-            for(int i = 0; i < tamanho-1; i++){
-
-                entrada[i] = d.get(i);
-            }
-
-            if(this.funcao == 2){ //Logistica [0,1]
-                
-                saida[(int)d.get(tamanho-1)-1] = 1.0;
-            }
-            else if(this.funcao == 3){ //Hiperbolica [-1,1]
-                
-                for(int i = 0; i < tamanho-1; i++){
-                    saida[i] = -1.0;
-                }
-                saida[(int)d.get(tamanho-1)-1] = 1.0;
-            }
-            
-    }*/
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////
+    /**
+     * Este método {@code treinamento} aplica o treinamento na rede a partir de um conjunto de dados.
+     * @param dados Conjunto de dados.
+     */
     public void treinamento(ArrayList<Dados> dados) {
 
         int numIteracoes = 0;
@@ -227,23 +221,14 @@ public class BackPropagation {
             flag = false;
             for (Dados d : dados) {
 
-                //Tamanho do vetor de dados
-                //Inicializando entrada e saida.
                 dadosEntrada = Arrays.copyOfRange(d.getDados(), 0, d.getDados().length - 1);
                 dadosSaida = CSVFile.classes.get((int) d.getDados()[d.getDados().length - 1]).clone();
-                //this.inicializarVetores(dadosEntrada, dadosSaida, tamanho, d);
 
-                //Realizando treinamento
                 this.treinar(dadosEntrada, dadosSaida);
-
-                //this.treinar(new double[]{d.get(0), d.get(1), d.get(2), d.get(3), d.get(4), d.get(5)}, new double[]{d.get(6)});
-                //System.out.println(count++);
                 
-                if (this.pararTreinamento(opcaoErro, numIteracoes)) { //retorna true se o erro for maior do que o desejado
+                if (this.pararTreinamento(opcaoErro, numIteracoes)) { 
                     flag = true;
-                }
-                
-                
+                } 
             }
 
             numIteracoes++;
@@ -253,6 +238,11 @@ public class BackPropagation {
 
     }
 
+    /**
+     * Aplica o treinamento para cada entrada e saída esperada, individualmente.
+     * @param dadoEntrada Conjunto de entrada.
+     * @param dadoSaida Conjunto de saída esperado.
+     */
     private void treinar(double[] dadoEntrada, double[] dadoSaida) {
 
         int count = 0;
@@ -262,8 +252,6 @@ public class BackPropagation {
             count++;
         }
 
-        //System.out.println(this);
-        //calcula net e saida da camada oculta e de saída
         for (Camada camada : this.camadas) {
 
             if (camada.temCamadaAnterior()) {
@@ -283,7 +271,7 @@ public class BackPropagation {
             }
         }
 
-        //erro na dadoSaida
+
         count = 0;
         for (Neuronio n : this.camadas[Camada.SAIDA].getNeuronios()) {
 
@@ -291,7 +279,7 @@ public class BackPropagation {
             count++;
         }
 
-        //erro na camada oculta
+
         for (Neuronio no : camadas[Camada.OCULTA].getNeuronios()) {
 
             double erro = 0;
@@ -301,12 +289,9 @@ public class BackPropagation {
             }
 
             no.setErro(erro * FuncaoTransferencia.derivada(no.getNet()));
-
-            //importante
-            //no.setSaida(FuncaoTransferencia.funcao(no.getNet()));
         }
 
-        //ajuste dos pesos da camada oculta e da saida
+
         for (Camada camada : this.camadas) {
 
             if (camada.temCamadaAnterior()) {
@@ -323,8 +308,14 @@ public class BackPropagation {
         }
 
     }
-
-    public boolean pararTreinamento(boolean opcaoErro, int numIteracoes) {
+    
+    /**
+     * Este método verifica a condição de término do treinamento.
+     * @param opcaoErro Define a operação entre erro máximo e número de iterações
+     * @param numIteracoes Total de iterações executadas até o momento.
+     * @return Retorna {@code true} para continuar repetindo, caso contrário {@code false}.
+     */
+    private boolean pararTreinamento(boolean opcaoErro, int numIteracoes) {
         boolean flag = false;
         if (opcaoErro) {
             double soma = 0;
@@ -334,8 +325,6 @@ public class BackPropagation {
             }
             
             soma *= 0.5;
-            
-            //System.out.println(soma);
             
             if (soma > this.erroMax) {
                 flag = true;
@@ -364,10 +353,19 @@ public class BackPropagation {
         return s.toString();
     }
     
+    /**
+     * Recupera a camada pela identificação.
+     * @param i Número da camada.
+     * @return Retorna a instancia da camada escolhida.
+     */
     public Camada getCamada(int i){
         return camadas[i];
     }
-
+    
+    /**
+     * Recupera a matriz de confusão da rede.
+     * @return Retorna a instancia atual da matriz de confusão.
+     */
     public MatrizConfusao getMatrizConfusao() {
 
         return matrizConfusao;

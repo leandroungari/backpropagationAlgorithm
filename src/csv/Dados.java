@@ -5,8 +5,6 @@
  */
 package csv;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author leandroungari
@@ -14,6 +12,9 @@ import java.util.ArrayList;
  */
 public class Dados {
     
+    /**
+     * Consiste em um linha de dados, contendo os respectivos atributos e a classe real.
+     */
     private double[] dados;
     
     public Dados(double[] dados){
@@ -63,29 +64,5 @@ public class Dados {
         return d;
     }
     
-    
-    
-    public static ArrayList<Dados> normalizacao(ArrayList<Dados> entrada){
-        
-        Dados max = entrada.get(0);
-        
-        for(Dados d: entrada){
-            
-            for(int i = 0; i < d.dados.length; i++){
-                
-                if (d.get(i) > max.get(i))  max.set(i, d.get(i));
-            }
-        }
-        
-        for(Dados d: entrada){
-            
-            for(int i = 0; i < d.dados.length; i++){
-                
-                d.set(i, d.get(i)/max.get(i));
-            }
-        }
-        
-        return entrada;
-    }
     
 }

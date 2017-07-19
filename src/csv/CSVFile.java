@@ -23,6 +23,12 @@ public class CSVFile {
     public static HashMap<Integer, double[]> classes = new HashMap();
     public static int numSaida;
     
+    /**
+     * Realiza a leitura do conjunto de dados no arquivo especificado.
+     * @param filename Nome do arquivo.
+     * @return Retorna um ArrayList com o conjunto de dados.
+     * @throws FileNotFoundException 
+     */
     public static ArrayList<Dados> read(String filename) throws FileNotFoundException {
 
         int classe;
@@ -49,16 +55,16 @@ public class CSVFile {
                     d[i] = Double.parseDouble(elementos[i]);
                 }
 
-                //Identificando quantidade de classes
+
                 classe = (int) d[elementos.length-1];
                 classes.put(classe, null);
                 
-                //Adicionando na estrutura que armazena os valores das classes e de seus elementos
+
                 dados.add(new Dados(d));
                 
             } catch (NumberFormatException e) {
                 
-                //passar para o proximo
+
             }
 
         }
@@ -79,6 +85,10 @@ public class CSVFile {
         return(s);
     }
     
+    /**
+     * Define as saídas esperadas com base no conjunto de classes dos dados de entrada e na função de transferência escolhida.
+     * @param funcaoTransferencia Função matemática escolhida.
+     */
     public static void ajustarSaida(int funcaoTransferencia){
         
         double min, max;

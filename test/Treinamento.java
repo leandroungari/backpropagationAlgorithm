@@ -20,23 +20,33 @@ public class Treinamento {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        int funcao = FuncaoTransferencia.TANGENTE_HIPERBOLICA;
-        int peso = BackPropagation.PESO_ALEATORIO;
+        
 
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/treinamento.csv");
+        
+        /////////////////////////////////////////////////
+        
+        int funcao = FuncaoTransferencia.LOGISTICA;
+        
+        
         CSVFile.ajustarSaida(funcao);
-
         Normalizacao.analisar(dados, funcao);
         dados = Normalizacao.normalizar(dados);
-       
-
+        
+        ///////////////////////////////////////////
+        int peso = BackPropagation.PESO_ALEATORIO;
         int numOculta = (int) Math.ceil(Math.sqrt(CSVFile.numEntrada * CSVFile.numSaida));
-        BackPropagation b = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, 1, funcao, peso, 0.001);
-
-        //System.out.println(b);
+        
+        BackPropagation b = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, peso);
+        b.inicializar(1, funcao, 0.001);
+        
+        ////////////////////////////////////////
+        
+        
         b.treinamento(dados);
 
-        //System.out.println(b);
+        /////////////////////////////////////////
+        
         dados = CSVFile.read("Treinamento e Teste/teste.csv");
         CSVFile.ajustarSaida(funcao);
 
@@ -44,6 +54,9 @@ public class Treinamento {
         b.teste(dados);
 
         System.out.println(b.getMatrizConfusao());
-
+        
+        
+        
+        
     }
 }

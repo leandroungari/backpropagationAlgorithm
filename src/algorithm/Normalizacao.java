@@ -20,6 +20,11 @@ public class Normalizacao {
     
     public static int funcaoTreinamento;
     
+    /**
+     * Este método obtém informações do conjunto de dados, como valores mínimo e máximo.
+     * @param treinamento
+     * @param funcaoTreinamento 
+     */
     public static void analisar(ArrayList<Dados> treinamento, int funcaoTreinamento){
         
         Normalizacao.funcaoTreinamento = funcaoTreinamento;
@@ -43,8 +48,9 @@ public class Normalizacao {
     }
     
     /**
-     * Arrumar normalização de modo que esta seja proporcional entre os limites para a logistica e tangente hiperbolica
-     *  
+     * Aplica a normalização no conjunto de dados com base no domínio de dados da função de transferência escolhida para a rede, 
+     * @param conjunto Conjunto de dados.
+     * @return Retorna o conjunto de dados normalizado.
      */
     public static ArrayList<Dados> normalizar(ArrayList<Dados> conjunto){
         

@@ -27,7 +27,11 @@ public class Neuronio {
         this.pesos = new HashMap<>();
         this.saida = 0;
     }
-
+    
+    /**
+     * Inicializa os pesos do neurônio de forma aletória ou gaussiana.
+     * @param anterior Refere-se a camada antecedente na rede.
+     */
     public void inicializarPesos(Camada anterior) {
 
         if (anterior == null) {

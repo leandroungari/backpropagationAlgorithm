@@ -35,6 +35,10 @@ public class Camada {
         return nos;
     }
     
+    /**
+     * Verifica se a camada atual possui camada antecedente.
+     * @return 
+     */
     public boolean temCamadaAnterior(){
         
         return this.anterior != null;
@@ -57,6 +61,10 @@ public class Camada {
         return s.toString();
     }
     
+    /**
+     * Este método extrai o conjunto de valores da saída dos neurônios desta camada.
+     * @return Retorna um array com os valores de saída.
+     */
     public double[] saidas(){
         
         double[] lista = new double[this.getNeuronios().length];
