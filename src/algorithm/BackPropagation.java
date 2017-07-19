@@ -173,7 +173,14 @@ public class BackPropagation {
     public void atualizarMatrizConfusao(double[] dadoSaida){
         
         int real, obtido;
+        real = this.maior(dadoSaida);
+        obtido = this.maior(camadas[Camada.SAIDA].saidas());
 
+        matrizConfusao.add(real, obtido);
+    }
+    
+    private int maior(double[] dadoSaida){
+        
         double maior = dadoSaida[0];
         int posicao = 0;
         for (int a = 0; a < dadoSaida.length; a++) {
@@ -182,22 +189,8 @@ public class BackPropagation {
                 posicao = a;
             }
         }
-
-        real = posicao;
-
-        maior = camadas[Camada.SAIDA].getNeuronios()[0].getSaida();
-        posicao = 0;
-        for (int a = 0; a < camadas[Camada.SAIDA].getNeuronios().length; a++) {
-            if (camadas[Camada.SAIDA].getNeuronios()[a].getSaida() > maior) {
-                
-                maior = camadas[Camada.SAIDA].getNeuronios()[a].getSaida();
-                posicao = a;
-            }
-        }
-
-        obtido = posicao;
-
-        matrizConfusao.add(real, obtido);
+        
+        return posicao;
     }
 
     /*public void inicializarVetores(double entrada[], double saida[], int tamanho, Dados d){

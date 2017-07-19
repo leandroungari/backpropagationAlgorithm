@@ -1,6 +1,5 @@
 
 import algorithm.BackPropagation;
-import algorithm.Camada;
 import algorithm.FuncaoTransferencia;
 import algorithm.Normalizacao;
 import csv.CSVFile;
@@ -21,16 +20,17 @@ public class Treinamento {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        int funcao = FuncaoTransferencia.LOGISTICA;
+        int funcao = FuncaoTransferencia.TANGENTE_HIPERBOLICA;
         int peso = BackPropagation.PESO_ALEATORIO;
 
         ArrayList<Dados> dados = CSVFile.read("Treinamento e Teste/treinamento.csv");
         CSVFile.ajustarSaida(funcao);
 
-        Normalizacao.obterMaximo(dados);
+        Normalizacao.analisar(dados, funcao);
         dados = Normalizacao.normalizar(dados);
+       
 
-        int numOculta = (int) Math.round(Math.sqrt(CSVFile.numEntrada * CSVFile.numSaida));
+        int numOculta = (int) Math.ceil(Math.sqrt(CSVFile.numEntrada * CSVFile.numSaida));
         BackPropagation b = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, 1, funcao, peso, 0.001);
 
         //System.out.println(b);

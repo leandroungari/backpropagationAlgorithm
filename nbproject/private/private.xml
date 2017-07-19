@@ -5,9 +5,10 @@
         <group>
             <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/BackPropagation.java</file>
             <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/FuncaoTransferencia.java</file>
-            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/Camada.java</file>
             <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/test/Treinamento.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/Normalizacao.java</file>
             <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/algorithm/Neuronio.java</file>
+            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/csv/CSVFile.java</file>
         </group>
     </open-files>
 </project-private>

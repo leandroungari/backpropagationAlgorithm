@@ -83,7 +83,7 @@ public class CSVFile {
         
         double min, max;
         
-        if(funcaoTransferencia == FuncaoTransferencia.LOGISTICA || funcaoTransferencia == FuncaoTransferencia.LINEAR){
+        if(funcaoTransferencia == FuncaoTransferencia.LOGISTICA){
             min = 0; max = 1;
         }
         else{

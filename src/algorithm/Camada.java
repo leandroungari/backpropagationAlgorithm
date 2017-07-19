@@ -57,5 +57,15 @@ public class Camada {
         return s.toString();
     }
     
-    
+    public double[] saidas(){
+        
+        double[] lista = new double[this.getNeuronios().length];
+        int count = 0;
+        for(Neuronio n: this.getNeuronios()){
+            lista[count] = n.getSaida();
+            count++;
+        }
+        
+        return lista;
+    }
 }
