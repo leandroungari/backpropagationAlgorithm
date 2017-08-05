@@ -48,6 +48,14 @@ public class Neuronio {
         }
     }
 
+    public HashMap<Integer, Double> getPesos() {
+        return pesos;
+    }
+
+    public void setPesos(HashMap<Integer, Double> pesos) {
+        this.pesos = pesos;
+    }
+    
     public double getPeso(int id) {
 
         return pesos.get(id);

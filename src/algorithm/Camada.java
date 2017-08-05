@@ -35,6 +35,16 @@ public class Camada {
         return nos;
     }
     
+    public Neuronio getNeuronio(int id) {
+        
+        for(int i = 0; i < this.nos.length; i++){
+            
+            if(nos[i].getId() == id) return(nos[i]);
+        }
+        
+        return(null);
+    }
+    
     /**
      * Verifica se a camada atual possui camada antecedente.
      * @return 

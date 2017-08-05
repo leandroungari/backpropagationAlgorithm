@@ -19,7 +19,7 @@ import java.util.Random;
 public class BackPropagation {
 
     private final int numEntrada;
-    private final int numOculta;
+    private int numOculta;
     private final int numSaida;
 
     private double taxaAprendizagem;
@@ -371,4 +371,13 @@ public class BackPropagation {
         return matrizConfusao;
     }
 
+    public int getNumOculta() {
+        return numOculta;
+    }
+
+    public void setNumOculta(int numOculta) {
+        this.numOculta = numOculta;
+    } 
+
+    
 }

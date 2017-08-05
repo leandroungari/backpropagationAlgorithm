@@ -6,6 +6,19 @@
 package iu;
 
 import algorithm.BackPropagation;
+import algorithm.FuncaoTransferencia;
+import algorithm.Normalizacao;
+import csv.CSVFile;
+import csv.Dados;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -16,6 +29,10 @@ import javax.swing.UIManager;
 public class IUPrincipal extends javax.swing.JFrame {
 
     public BackPropagation rede;
+    public ArrayList<Dados> dados;
+    public int funcao;
+    public boolean arquivoTreinamento;
+    public boolean arquivoTeste;
     
     /**
      * Creates new form IUPrincipal
@@ -36,6 +53,22 @@ public class IUPrincipal extends javax.swing.JFrame {
         //Titulo da aplicação
         this.setTitle("Backpropagation Application");
         
+        //Inicialização
+        rede = null;
+        dados = null;
+        arquivoTreinamento = false;
+        arquivoTeste = false;
+        this.lblIconeTreinamento.setText("\u2718");
+        this.lblIconeTreinamento.setBackground(Color.RED);
+        this.lblIconeTeste.setText("\u2718");
+        this.lblIconeTeste.setBackground(Color.RED);
+        
+        this.funcao = FuncaoTransferencia.LOGISTICA;
+        
+        this.btnTreinar.setEnabled(false);
+        this.btnTestar.setEnabled(false);
+        this.btnAlterarPesos.setEnabled(false);
+        this.btnNumNeuroniosOculta.setEnabled(false);
     }
 
     /**
@@ -50,11 +83,12 @@ public class IUPrincipal extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jFileChooser1 = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         lblArquivoTreinamento = new javax.swing.JLabel();
         lblArquivoTeste = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblIconeTreinamento = new javax.swing.JLabel();
+        lblIconeTeste = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -96,6 +130,7 @@ public class IUPrincipal extends javax.swing.JFrame {
         MenuCarregarTeste = new javax.swing.JMenuItem();
         MenuSair = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -104,7 +139,7 @@ public class IUPrincipal extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(870, 550));
+        setPreferredSize(new java.awt.Dimension(950, 600));
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Arquivos"));
@@ -120,28 +155,31 @@ public class IUPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblArquivoTeste)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblArquivoTreinamento)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblArquivoTreinamento)
+                    .addComponent(lblArquivoTeste, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblIconeTeste, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIconeTreinamento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblArquivoTreinamento)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblArquivoTeste)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(lblIconeTeste, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(lblArquivoTreinamento))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblIconeTreinamento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblArquivoTeste)
+                        .addGap(8, 8, 8)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Operações"));
@@ -157,6 +195,11 @@ public class IUPrincipal extends javax.swing.JFrame {
         ComboBoxParadaTreinamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nº de interações", "Erro máximo" }));
 
         btnTreinar.setText("Trenar Rede Neural");
+        btnTreinar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTreinarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -193,6 +236,11 @@ public class IUPrincipal extends javax.swing.JFrame {
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Teste"));
 
         btnTestar.setText("Testar Rede Neural");
+        btnTestar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTestarActionPerformed(evt);
+            }
+        });
 
         TextAreaMatrizConfusao.setEditable(false);
         TextAreaMatrizConfusao.setColumns(20);
@@ -226,7 +274,7 @@ public class IUPrincipal extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addComponent(jScrollPane2)
                 .addContainerGap())
         );
 
@@ -289,8 +337,18 @@ public class IUPrincipal extends javax.swing.JFrame {
         jLabel15.setText("neuronios");
 
         btnNumNeuroniosOculta.setText("Alterar nº neuronios camada oculta");
+        btnNumNeuroniosOculta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNumNeuroniosOcultaActionPerformed(evt);
+            }
+        });
 
         btnAlterarPesos.setText("Alterar pesos da rede neural");
+        btnAlterarPesos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarPesosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -351,6 +409,11 @@ public class IUPrincipal extends javax.swing.JFrame {
         jLabel8.setText("Função de Transferência: ");
 
         ComboBoxFuncaoTransferencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Logística", "Tangente Hiperbólica" }));
+        ComboBoxFuncaoTransferencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboBoxFuncaoTransferenciaActionPerformed(evt);
+            }
+        });
 
         tfTaxaAprendizado.setText("0.1");
 
@@ -375,8 +438,8 @@ public class IUPrincipal extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfQtdClasses, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
+                                .addComponent(tfQtdClasses, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                                 .addComponent(jLabel9)
                                 .addGap(2, 2, 2)
                                 .addComponent(tfQtdAtributos, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -447,7 +510,21 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         jMenuBar2.add(MenuCarregarTreinamento);
 
-        jMenu4.setText("Sobre");
+        jMenu4.setText("Ajuda");
+        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu4ActionPerformed(evt);
+            }
+        });
+
+        jMenuItem2.setText("Sobre");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem2);
+
         jMenuBar2.add(jMenu4);
 
         setJMenuBar(jMenuBar2);
@@ -463,19 +540,19 @@ public class IUPrincipal extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(261, 261, 261))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -490,7 +567,41 @@ public class IUPrincipal extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
 
         //CarregarTreinamento
+        int returnVal = jFileChooser1.showOpenDialog(this);
+        File file;
         
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            
+            file = jFileChooser1.getSelectedFile();
+            String localizacao = file.getAbsolutePath();
+            try {
+                dados = CSVFile.read(localizacao);
+                this.lblIconeTreinamento.setText("\u2714");
+                this.lblIconeTreinamento.setBackground(Color.GREEN);
+                this.tfQtdClasses.setText(String.valueOf(CSVFile.classes.size()));
+                this.tfQtdAtributos.setText(String.valueOf(CSVFile.numEntrada));
+                
+                int numOculta = (int) Math.ceil(Math.sqrt(CSVFile.numEntrada * CSVFile.numSaida));
+                
+                this.tfQtdNeuroniosEntrada.setText(String.valueOf(CSVFile.numEntrada));
+                this.tfQtdNeuroniosOculta.setText(String.valueOf(numOculta));
+                this.tfQtdNeuroniosSaida.setText(String.valueOf(CSVFile.numSaida));
+        
+                rede = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, BackPropagation.PESO_ALEATORIO);
+                
+                this.btnTreinar.setEnabled(true);
+                this.btnAlterarPesos.setEnabled(true);
+                this.btnNumNeuroniosOculta.setEnabled(true);
+                
+                arquivoTreinamento = true;
+                JOptionPane.showMessageDialog(null, "Arquivo de treinamento carregado com sucesso!");
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo!");
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -498,7 +609,125 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         //CarregarTeste
         
+        if(arquivoTreinamento){
+            
+            int returnVal = jFileChooser1.showOpenDialog(this);
+            File file;
+            
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+            
+                file = jFileChooser1.getSelectedFile();
+                String localizacao = file.getAbsolutePath();
+                try {
+                    dados = CSVFile.read(localizacao);
+                    this.lblIconeTeste.setText("\u2714");
+                    this.lblIconeTeste.setBackground(Color.GREEN);
+                    
+                    this.btnTestar.setEnabled(true);
+                    
+                    JOptionPane.showMessageDialog(null, "Arquivo de teste carregado com sucesso!");
+                } catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo!");
+                }
+            } else {
+                System.out.println("File access cancelled by user.");
+            }
+        }
+        else JOptionPane.showMessageDialog(null, "Necessário carregar arquivo de treinamento primeiro!");
+        
+        
     }//GEN-LAST:event_MenuCarregarTesteActionPerformed
+
+    private void ComboBoxFuncaoTransferenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxFuncaoTransferenciaActionPerformed
+        // TODO add your handling code here:
+        
+        if(this.ComboBoxFuncaoTransferencia.getSelectedItem().toString().equals("Logística")){
+            funcao = FuncaoTransferencia.LOGISTICA;
+        }
+        else funcao = FuncaoTransferencia.TANGENTE_HIPERBOLICA;
+        
+    }//GEN-LAST:event_ComboBoxFuncaoTransferenciaActionPerformed
+
+    private void btnTreinarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTreinarActionPerformed
+        // TODO add your handling code here:
+        
+        CSVFile.ajustarSaida(funcao);
+        Normalizacao.analisar(dados, funcao);
+        dados = Normalizacao.normalizar(dados);
+        
+        double taxaAprendizagem = Double.parseDouble(this.tfTaxaAprendizado.getText());
+        
+        if(this.ComboBoxParadaTreinamento.getSelectedItem().toString().equals("Nº de interações")){
+            int interacoes = Integer.parseInt(this.tfParadaTreinamento.getText());
+            rede.inicializar(taxaAprendizagem, funcao, interacoes);
+        }
+        else{
+            double erro = Double.parseDouble(this.tfParadaTreinamento.getText());
+            rede.inicializar(taxaAprendizagem, funcao, erro);
+        }
+        
+        rede.treinamento(dados);
+        
+        JOptionPane.showMessageDialog(null, "Treinamento realizado com sucesso!");
+        
+        this.btnNumNeuroniosOculta.setEnabled(false);
+        this.btnAlterarPesos.setEnabled(false);
+        this.btnTreinar.setEnabled(false);
+        
+    }//GEN-LAST:event_btnTreinarActionPerformed
+
+    private void btnTestarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTestarActionPerformed
+        // TODO add your handling code here:
+        
+        CSVFile.ajustarSaida(funcao);
+        dados = Normalizacao.normalizar(dados);
+        
+        rede.teste(dados);
+
+        JOptionPane.showMessageDialog(null, "Teste realizado com sucesso, confira a matriz de confusão!");
+        
+        this.TextAreaMatrizConfusao.setText(rede.getMatrizConfusao().toString());
+        
+    }//GEN-LAST:event_btnTestarActionPerformed
+
+    private void btnNumNeuroniosOcultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNumNeuroniosOcultaActionPerformed
+        // TODO add your handling code here:
+        
+        String numOculta = JOptionPane.showInputDialog("Qual é o novo número de neurônios da camada oculta?");
+        
+        if(numOculta != null && !numOculta.equals("")){
+            
+            this.tfQtdNeuroniosOculta.setText(numOculta);
+            rede.setNumOculta(Integer.parseInt(numOculta));
+        }
+        
+    }//GEN-LAST:event_btnNumNeuroniosOcultaActionPerformed
+
+    private void btnAlterarPesosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarPesosActionPerformed
+        // TODO add your handling code here:
+        
+        IUAlterarPesos cad = new IUAlterarPesos(this, true);
+        cad.rede = rede;
+        cad.setLocationRelativeTo(this);
+        cad.setVisible(true);
+        rede = cad.rede;
+        
+    }//GEN-LAST:event_btnAlterarPesosActionPerformed
+
+    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+        // TODO add your handling code here:
+       
+        
+    }//GEN-LAST:event_jMenu4ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        
+        IUSobre cad = new IUSobre(this, true);
+        cad.setLocationRelativeTo(this);
+        cad.setVisible(true);
+        
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -546,6 +775,7 @@ public class IUPrincipal extends javax.swing.JFrame {
     private javax.swing.JToggleButton btnNumNeuroniosOculta;
     private javax.swing.JToggleButton btnTestar;
     private javax.swing.JToggleButton btnTreinar;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -555,8 +785,6 @@ public class IUPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -569,6 +797,7 @@ public class IUPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -578,6 +807,8 @@ public class IUPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblArquivoTeste;
     private javax.swing.JLabel lblArquivoTreinamento;
+    private javax.swing.JLabel lblIconeTeste;
+    private javax.swing.JLabel lblIconeTreinamento;
     private javax.swing.JTextField tfParadaTreinamento;
     private javax.swing.JTextField tfQtdAtributos;
     private javax.swing.JTextField tfQtdClasses;

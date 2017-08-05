@@ -116,7 +116,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
-        <Property name="text" type="java.lang.String" value="R.A.: "/>
+        <Property name="text" type="java.lang.String" value="R.A.: 141250992"/>
       </Properties>
     </Component>
   </SubComponents>

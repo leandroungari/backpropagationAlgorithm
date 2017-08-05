@@ -38,7 +38,7 @@ public class Treinamento {
         int numOculta = (int) Math.ceil(Math.sqrt(CSVFile.numEntrada * CSVFile.numSaida));
         
         BackPropagation b = new BackPropagation(CSVFile.numEntrada, CSVFile.numSaida, numOculta, peso);
-        b.inicializar(1, funcao, 0.001);
+        b.inicializar(1.0, funcao, 0.001);
         
         ////////////////////////////////////////
         

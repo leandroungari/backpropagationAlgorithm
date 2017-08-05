@@ -5,6 +5,9 @@
  */
 package iu;
 
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 /**
  *
  * @author bruno
@@ -17,6 +20,17 @@ public class IUSobre extends javax.swing.JDialog {
     public IUSobre(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        try {    
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            SwingUtilities.updateComponentTreeUI(this);
+            
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        this.setTitle("Sobre");
+        
     }
 
     /**
@@ -50,7 +64,7 @@ public class IUSobre extends javax.swing.JDialog {
 
         jLabel6.setText("Leandro Ungari Cayres");
 
-        jLabel7.setText("R.A.: ");
+        jLabel7.setText("R.A.: 141250992");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
