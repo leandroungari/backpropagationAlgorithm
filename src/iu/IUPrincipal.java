@@ -6,6 +6,7 @@
 package iu;
 
 import algorithm.BackPropagation;
+import algorithm.Camada;
 import algorithm.FuncaoTransferencia;
 import algorithm.Normalizacao;
 import csv.CSVFile;
@@ -706,7 +707,11 @@ public class IUPrincipal extends javax.swing.JFrame {
         if(numOculta != null && !numOculta.equals("")){
             
             this.tfQtdNeuroniosOculta.setText(numOculta);
-            rede.setNumOculta(Integer.parseInt(numOculta));
+            
+            int num = Integer.parseInt(numOculta);
+            rede.setNumOculta(num);
+            
+            this.rede.modificarCamadaOculta(num);
         }
         
     }//GEN-LAST:event_btnNumNeuroniosOcultaActionPerformed

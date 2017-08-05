@@ -45,6 +45,8 @@ public class Neuronio {
             } else {
                 this.pesos.put(n.getId(), Math.random() * (Math.random() > 0.5 ? 1 : -1));
             }
+            
+            
         }
     }
 

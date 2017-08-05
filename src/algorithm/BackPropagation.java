@@ -389,4 +389,26 @@ public class BackPropagation {
         this.numOculta = numOculta;
     }
 
+    public void modificarCamadaOculta(int num) {
+
+        this.camadas[Camada.OCULTA].modificarCamadaOculta(num);
+
+        for (Neuronio noSaida : this.camadas[Camada.SAIDA].getNeuronios()) {
+
+            for (Neuronio noOculta : this.camadas[Camada.OCULTA].getNeuronios()) {
+
+                if (noSaida.getPesos().get(noOculta.getId()) == null) {
+
+                    if (BackPropagation.tipoPeso == BackPropagation.PESO_GAUSSIANO) {
+                        
+                        noSaida.getPesos().put(noOculta.getId(), BackPropagation.random.nextGaussian());
+                    } else {
+                        noSaida.getPesos().put(noOculta.getId(), Math.random() * (Math.random() > 0.5 ? 1 : -1));
+                    }
+
+                }
+            }
+        }
+    }
+
 }
