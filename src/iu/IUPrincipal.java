@@ -140,7 +140,6 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(950, 600));
-        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Arquivos"));
 
@@ -194,7 +193,7 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         ComboBoxParadaTreinamento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nº de interações", "Erro máximo" }));
 
-        btnTreinar.setText("Trenar Rede Neural");
+        btnTreinar.setText("Treinar Rede Neural");
         btnTreinar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTreinarActionPerformed(evt);
@@ -256,10 +255,10 @@ public class IUPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnTestar, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(btnTestar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -595,6 +594,7 @@ public class IUPrincipal extends javax.swing.JFrame {
                 
                 arquivoTreinamento = true;
                 JOptionPane.showMessageDialog(null, "Arquivo de treinamento carregado com sucesso!");
+                
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo!");
             }
@@ -651,11 +651,19 @@ public class IUPrincipal extends javax.swing.JFrame {
     private void btnTreinarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTreinarActionPerformed
         // TODO add your handling code here:
         
+        System.out.println(this.rede);
+        
         CSVFile.ajustarSaida(funcao);
         Normalizacao.analisar(dados, funcao);
         dados = Normalizacao.normalizar(dados);
         
         double taxaAprendizagem = Double.parseDouble(this.tfTaxaAprendizado.getText());
+        
+        if (this.tfParadaTreinamento.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Entre com um valor!");
+            return;
+        }
+        
         
         if(this.ComboBoxParadaTreinamento.getSelectedItem().toString().equals("Nº de interações")){
             int interacoes = Integer.parseInt(this.tfParadaTreinamento.getText());

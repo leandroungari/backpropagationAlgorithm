@@ -41,6 +41,8 @@ public class IUAlterarPesos extends javax.swing.JDialog {
         
         hash = new HashMap<>();
         
+        this.ComboBoxNeuronios.setEnabled(false);
+        
         //this.tfAlterarPeso.setText(this.ComboBoxPesos.getSelectedItem().toString());
     }
 
@@ -213,6 +215,8 @@ public class IUAlterarPesos extends javax.swing.JDialog {
 
     private void ComboBoxCamadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxCamadasActionPerformed
         // TODO add your handling code here:
+        
+        this.ComboBoxNeuronios.setEnabled(true);
         
         if(this.ComboBoxCamadas.getSelectedItem().toString().equals("Oculta")){
             
