@@ -27,7 +27,7 @@ public class BackPropagation {
     private final Camada[] camadas;
     private MatrizConfusao matrizConfusao;
 
-    public static int contadorNeuronio = 0;
+    public static int contadorNeuronio;
 
     private double erroMax;
     private int numIteracoesMax;
@@ -52,6 +52,8 @@ public class BackPropagation {
      */
     public BackPropagation(int numEntrada, int numSaida, int numOculta, int tipoPeso) {
 
+        contadorNeuronio = 0;
+        
         if (tipoPeso == PESO_GAUSSIANO) {
 
             BackPropagation.random = new Random();

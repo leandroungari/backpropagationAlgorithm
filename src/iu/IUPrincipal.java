@@ -90,6 +90,7 @@ public class IUPrincipal extends javax.swing.JFrame {
         lblArquivoTeste = new javax.swing.JLabel();
         lblIconeTreinamento = new javax.swing.JLabel();
         lblIconeTeste = new javax.swing.JLabel();
+        btnLimpar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -148,6 +149,13 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         lblArquivoTeste.setText("Teste carregado:");
 
+        btnLimpar.setText("Limpar teste e treinamento");
+        btnLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -161,24 +169,30 @@ public class IUPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblIconeTeste, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIconeTreinamento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLimpar)
+                .addGap(37, 37, 37))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblIconeTeste, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lblIconeTeste, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(21, 21, 21)
+                                    .addComponent(lblArquivoTreinamento))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(lblIconeTreinamento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(lblArquivoTeste)
+                            .addGap(8, 8, 8)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(lblArquivoTreinamento))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lblIconeTreinamento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblArquivoTeste)
-                        .addGap(8, 8, 8)))
+                        .addGap(37, 37, 37)
+                        .addComponent(btnLimpar)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -415,7 +429,11 @@ public class IUPrincipal extends javax.swing.JFrame {
             }
         });
 
-        tfTaxaAprendizado.setText("0.1");
+        tfTaxaAprendizado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTaxaAprendizadoActionPerformed(evt);
+            }
+        });
 
         jLabel16.setText("Taxa de aprendizado:");
 
@@ -697,6 +715,8 @@ public class IUPrincipal extends javax.swing.JFrame {
         
         this.TextAreaMatrizConfusao.setText(rede.getMatrizConfusao().toString());
         
+        this.btnTestar.setEnabled(false);
+        
     }//GEN-LAST:event_btnTestarActionPerformed
 
     private void btnNumNeuroniosOcultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNumNeuroniosOcultaActionPerformed
@@ -742,6 +762,49 @@ public class IUPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
+        // TODO add your handling code here:
+        
+        //Limpando classe de arquivos
+        CSVFile.numEntrada = 0;
+        CSVFile.numSaida = 0;
+        CSVFile.classes = new HashMap<>();
+        
+        //Limpando rede e dados
+        rede = null;
+        dados = null;
+        
+        //Limpando interface
+        arquivoTreinamento = false;
+        arquivoTeste = false;
+        this.lblIconeTreinamento.setText("\u2718");
+        this.lblIconeTreinamento.setBackground(Color.RED);
+        this.lblIconeTeste.setText("\u2718");
+        this.lblIconeTeste.setBackground(Color.RED);
+        
+        this.funcao = FuncaoTransferencia.LOGISTICA;
+        
+        this.btnTreinar.setEnabled(false);
+        this.btnTestar.setEnabled(false);
+        this.btnAlterarPesos.setEnabled(false);
+        this.btnNumNeuroniosOculta.setEnabled(false);
+        
+        this.tfParadaTreinamento.setText("");
+        this.tfQtdAtributos.setText("");
+        this.tfQtdClasses.setText("");
+        this.tfQtdNeuroniosEntrada.setText("");
+        this.tfQtdNeuroniosOculta.setText("");
+        this.tfQtdNeuroniosSaida.setText("");
+        this.tfTaxaAprendizado.setText("");
+        
+        this.TextAreaMatrizConfusao.setText("");
+        
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void tfTaxaAprendizadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTaxaAprendizadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTaxaAprendizadoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -785,6 +848,7 @@ public class IUPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem MenuSair;
     private javax.swing.JTextArea TextAreaMatrizConfusao;
     private javax.swing.JToggleButton btnAlterarPesos;
+    private javax.swing.JButton btnLimpar;
     private javax.swing.JToggleButton btnNumNeuroniosOculta;
     private javax.swing.JToggleButton btnTestar;
     private javax.swing.JToggleButton btnTreinar;
