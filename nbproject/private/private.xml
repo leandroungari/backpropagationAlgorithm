@@ -3,8 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/src/iu/IUPrincipal.java</file>
-            <file>file:/home/leandroungari/Documents/backpropagationAlgorithm/test/Treinamento.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/Normalizacao.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/MatrizConfusao.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/Camada.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/Neuronio.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/FuncaoTransferencia.java</file>
+            <file>file:/D:/Ciência%20da%20Computação%20-%20Unesp/4º%20Ano/1º%20Semestre/Inteligencia%20Artificial/IA/BackPropagation/backpropagationAlgorithm/src/algorithm/BackPropagation.java</file>
         </group>
     </open-files>
 </project-private>

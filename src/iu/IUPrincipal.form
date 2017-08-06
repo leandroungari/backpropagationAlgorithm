@@ -666,22 +666,22 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
-                <Property name="text" type="java.lang.String" value="neuronios"/>
+                <Property name="text" type="java.lang.String" value="neur&#xf4;nios"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel14">
               <Properties>
-                <Property name="text" type="java.lang.String" value="neuronios"/>
+                <Property name="text" type="java.lang.String" value="neur&#xf4;nios"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
-                <Property name="text" type="java.lang.String" value="neuronios"/>
+                <Property name="text" type="java.lang.String" value="neur&#xf4;nios"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JToggleButton" name="btnNumNeuroniosOculta">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Alterar n&#xba; neuronios camada oculta"/>
+                <Property name="text" type="java.lang.String" value="Alterar n&#xba; neur&#xf4;nios camada oculta"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNumNeuroniosOcultaActionPerformed"/>

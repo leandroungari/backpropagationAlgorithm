@@ -344,13 +344,13 @@ public class IUPrincipal extends javax.swing.JFrame {
 
         tfQtdNeuroniosSaida.setEditable(false);
 
-        jLabel13.setText("neuronios");
+        jLabel13.setText("neurônios");
 
-        jLabel14.setText("neuronios");
+        jLabel14.setText("neurônios");
 
-        jLabel15.setText("neuronios");
+        jLabel15.setText("neurônios");
 
-        btnNumNeuroniosOculta.setText("Alterar nº neuronios camada oculta");
+        btnNumNeuroniosOculta.setText("Alterar nº neurônios camada oculta");
         btnNumNeuroniosOculta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNumNeuroniosOcultaActionPerformed(evt);
@@ -798,6 +798,8 @@ public class IUPrincipal extends javax.swing.JFrame {
         this.tfTaxaAprendizado.setText("");
         
         this.TextAreaMatrizConfusao.setText("");
+        
+        JOptionPane.showMessageDialog(null, "Arquivos e rede limpada, novos arquivos e uma nova rede pode ser configurada!");
         
     }//GEN-LAST:event_btnLimparActionPerformed
 

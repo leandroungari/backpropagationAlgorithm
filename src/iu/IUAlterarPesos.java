@@ -39,6 +39,10 @@ public class IUAlterarPesos extends javax.swing.JDialog {
         
         this.setTitle("Alterar pesos");
         
+        this.ComboBoxCamadas.addItem("");
+        this.ComboBoxCamadas.addItem("Oculta");
+        this.ComboBoxCamadas.addItem("Saída");
+        
         hash = new HashMap<>();
         
         this.ComboBoxNeuronios.setEnabled(false);
@@ -77,7 +81,6 @@ public class IUAlterarPesos extends javax.swing.JDialog {
 
         jLabel3.setText("Alterar peso:");
 
-        ComboBoxCamadas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Oculta", "Saída" }));
         ComboBoxCamadas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboBoxCamadasActionPerformed(evt);
@@ -134,26 +137,20 @@ public class IUAlterarPesos extends javax.swing.JDialog {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel1)
                                 .addComponent(jLabel4)))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(18, 18, 18)
-                                    .addComponent(tfAlterarPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(ComboBoxNeuronios, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(18, 18, 18)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(ComboBoxCamadas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel5)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(ComboBoxPesos, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(tfJ, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(tfAlterarPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ComboBoxNeuronios, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ComboBoxCamadas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ComboBoxPesos, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tfJ, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(83, 83, 83)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -236,6 +233,12 @@ public class IUAlterarPesos extends javax.swing.JDialog {
                 this.ComboBoxNeuronios.addItem(String.valueOf(n.getId()));
             }
         }
+        else {
+            this.ComboBoxNeuronios.removeAllItems();
+            this.ComboBoxPesos.removeAllItems();
+            this.tfAlterarPeso.setText("");
+            this.tfJ.setText("");
+        }
         
     }//GEN-LAST:event_ComboBoxCamadasActionPerformed
 
@@ -286,6 +289,8 @@ public class IUAlterarPesos extends javax.swing.JDialog {
             double novoPeso = Double.parseDouble(this.tfAlterarPeso.getText());
             
             rede.getCamada(Camada.OCULTA).getNeuronio(neuronio).setPeso(numPeso, novoPeso);
+            
+            JOptionPane.showMessageDialog(null, "Peso alterado com sucesso!");
         }
         else if(this.ComboBoxCamadas.getSelectedItem().toString().equals("Saída")){
             
@@ -294,9 +299,12 @@ public class IUAlterarPesos extends javax.swing.JDialog {
             double novoPeso = Double.parseDouble(this.tfAlterarPeso.getText());
             
             rede.getCamada(Camada.SAIDA).getNeuronio(neuronio).setPeso(numPeso, novoPeso);
+            
+            JOptionPane.showMessageDialog(null, "Peso alterado com sucesso!");
         }
-        
-        JOptionPane.showMessageDialog(null, "Peso alterado com sucesso!");
+        else{
+            JOptionPane.showMessageDialog(null, "Selecione uma camada!");
+        }
 
         
     }//GEN-LAST:event_btnSalvarPesosActionPerformed
